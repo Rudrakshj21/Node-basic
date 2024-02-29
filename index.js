@@ -22,25 +22,25 @@ const superagent = require('superagent');
 
 ////////////////////////////////////////////
 // Callback hell
-fs.readFile(`${__dirname}/dog.txt`, 'utf-8', (err, data) => {
-  console.log(data);
-  superagent
-    .get(`https://dog.ceo/api/breed/${data}/images/random`)
-    .end((err, res) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      // console.log('test');
-      // console.log(res.body.message);
-      fs.writeFile('dog-img-url.txt', res.body.message, (err) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      });
-    });
-});
+// fs.readFile(`${__dirname}/dog.txt`, 'utf-8', (err, data) => {
+//   console.log(data);
+//   superagent
+//     .get(`https://dog.ceo/api/breed/${data}/images/random`)
+//     .end((err, res) => {
+//       if (err) {
+//         console.log(err);
+//         return;
+//       }
+//       // console.log('test');
+//       // console.log(res.body.message);
+//       fs.writeFile('dog-img-url.txt', res.body.message, (err) => {
+//         if (err) {
+//           console.log(err);
+//           return;
+//         }
+//       });
+//     });
+// });
 
 // http req using core module
 // https.get("https://dog.ceo/api/breed s/image/random", (res) => {
@@ -56,3 +56,28 @@ fs.readFile(`${__dirname}/dog.txt`, 'utf-8', (err, data) => {
 //   .on("error", (error) => {
 //     console.log(error);
 //   });
+
+// Solve callback hell using promises
+fs.readFile(`${__dirname}/dog.txt`, 'utf-8', (err, data) => {
+  console.log(data);
+  superagent
+    .get(`https://dog.ceo/api/breed/${data}/images/random`) // at begin - pending promise , after coming with data - resolved promised
+    // if resolved promise is fulfilled
+    .then((res) => {
+      // console.log('test');
+      // console.log(res.body.message);
+      fs.writeFile('dog-img-url.txt', res.body.message, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+      });
+    })
+    //if resolved promise is rejected
+    .catch((err) => {
+      if (err) {
+        console.log(err.message);
+        return;
+      }
+    });
+});
