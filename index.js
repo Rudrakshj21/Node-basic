@@ -106,7 +106,7 @@ function writeFilePro(filePath, content) {
     });
   });
 }
-
+/*
 readFilePro(`${__dirname}/dog.txt`)
   .then((data) => {
     console.log(data);
@@ -130,8 +130,8 @@ readFilePro(`${__dirname}/dog.txt`)
       });
   })
   .catch((error) => console.log(error));
-
-  // even better way
+*/
+// even better way
 // readFilePro(`${__dirname}/dog.txt`)
 //   .then((data) => {
 //     console.log(data);
@@ -151,3 +151,24 @@ readFilePro(`${__dirname}/dog.txt`)
 //       .then((success) => console.log(success))
 //       .catch((err) => console.log('errrrrrr'));
 //   });
+////////////////////////////////////////////////////////////////////////////////////////////
+// consuming promises with async await
+// allows us to make our code look more synchronous
+async function getDogPic() {
+  try {
+    const data = await readFilePro(`${__dirname}/dog.txt`);
+    console.log(data);
+    const res = await superagent.get(
+      `https://dog.ceo/api/breed/${data}/images/random`
+    );
+    // console.log(res.body)
+    const { message } = res.body;
+    // console.log(message)
+    // return message;
+    await writeFilePro(`${__dirname}/dog-img-url.txt`, message);
+    console.log('written image url to file.....');
+  } catch (err) {
+    console.log(err);
+  }
+}
+getDogPic();
